@@ -51,3 +51,6 @@ variable "spoke_dev_subnets" {
 
 
 }
+variable "name_prefix" {
+  type = string
+}

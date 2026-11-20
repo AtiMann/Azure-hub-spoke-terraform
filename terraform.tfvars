@@ -25,3 +25,4 @@ spoke_dev_subnets = {
   }] }
   "snet-db" = { address_prefixes = ["10.5.2.0/24"] }
 }
+name_prefix = "kv-hubspoke"

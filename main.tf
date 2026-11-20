@@ -31,4 +31,13 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub_dev" {
   resource_group_name       = azurerm_resource_group.rg.name
   virtual_network_name      = module.spoke_dev_network.vnet_name
   remote_virtual_network_id = module.hub_network.vnet_id
+
+}
+module "keyvault" {
+  source              = "./modules/keyvault"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  name_prefix         = var.name_prefix
+
+
 }
