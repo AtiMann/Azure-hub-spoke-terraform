@@ -1,9 +1,15 @@
 variable "location" {
-    type = string
+  type = string
 }
-variable "resource_group_name"{
-    type = string
+variable "resource_group_name" {
+  type = string
 }
 variable "name_prefix" {
-    type = string
+  type = string
+}
+variable "subnet_id" {
+  type = string
+}
+variable "private_dns_zone_ids" {
+  type = string
 }

@@ -34,10 +34,30 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub_dev" {
 
 }
 module "keyvault" {
-  source              = "./modules/keyvault"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  name_prefix         = var.name_prefix
+  source               = "./modules/keyvault"
+  resource_group_name  = azurerm_resource_group.rg.name
+  location             = azurerm_resource_group.rg.location
+  name_prefix          = var.name_prefix
+  subnet_id            = module.spoke_dev_network.subnet_ids["snet-db"]
+  private_dns_zone_ids = azurerm_private_dns_zone.kv_dns.id
 
+
+}
+resource "azurerm_private_dns_zone" "kv_dns" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = azurerm_resource_group.rg.name
+}
+resource "azurerm_private_dns_zone_virtual_network_link" "hub_link" {
+  name                  = "link-kv-hub"
+  private_dns_zone_name = azurerm_private_dns_zone.kv_dns.name
+  resource_group_name   = azurerm_resource_group.rg.name
+  virtual_network_id    = module.hub_network.vnet_id
+
+}
+resource "azurerm_private_dns_zone_virtual_network_link" "spoke_link" {
+  name                  = "link-kv-spoke"
+  private_dns_zone_name = azurerm_private_dns_zone.kv_dns.name
+  resource_group_name   = azurerm_resource_group.rg.name
+  virtual_network_id    = module.spoke_dev_network.vnet_id
 
 }
