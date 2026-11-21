@@ -12,6 +12,7 @@ resource "azurerm_key_vault" "kv" {
   sku_name                  = "standard"
   tenant_id                 = data.azurerm_client_config.current.tenant_id
   enable_rbac_authorization = true
+  public_network_access_enabled = true
 
   soft_delete_retention_days = 7
   purge_protection_enabled   = false
@@ -33,6 +34,7 @@ resource "azurerm_private_endpoint" "kv_pe" {
     name                           = "psc-${azurerm_key_vault.kv.name}"
     subresource_names              = ["vault"]
     private_connection_resource_id = azurerm_key_vault.kv.id
+
   }
   private_dns_zone_group {
     name                 = "default"
