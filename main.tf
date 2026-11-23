@@ -83,7 +83,7 @@ module "compute" {
 }
 resource "azurerm_role_assignment" "vm_kv_reader" {
   principal_id         = module.compute.vm_principal_id
-  role_definition_name = "Key Vault Secrets User."
+  role_definition_name = "Key Vault Secrets User"
   scope                = module.keyvault.key_vault_id
 
 }
