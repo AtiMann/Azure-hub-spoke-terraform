@@ -6,13 +6,13 @@ resource "random_string" "suffix" {
   upper   = false
 }
 resource "azurerm_key_vault" "kv" {
-  location                  = var.location
-  name                      = "${var.name_prefix}-${random_string.suffix.result}"
-  resource_group_name       = var.resource_group_name
-  sku_name                  = "standard"
-  tenant_id                 = data.azurerm_client_config.current.tenant_id
+  location                      = var.location
+  name                          = "${var.name_prefix}-${random_string.suffix.result}"
+  resource_group_name           = var.resource_group_name
+  sku_name                      = "standard"
+  tenant_id                     = data.azurerm_client_config.current.tenant_id
   public_network_access_enabled = true
-  enable_rbac_authorization = true
+  enable_rbac_authorization     = true
 
   soft_delete_retention_days = 7
   purge_protection_enabled   = false

@@ -61,3 +61,29 @@ resource "azurerm_private_dns_zone_virtual_network_link" "spoke_link" {
   virtual_network_id    = module.spoke_dev_network.vnet_id
 
 }
+resource "random_password" "vm_password" {
+  length           = 16
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+resource "azurerm_key_vault_secret" "vm_password" {
+  key_vault_id = module.keyvault.key_vault_id
+  name         = "vm-admin-password"
+  value        = random_password.vm_password.result
+  depends_on   = [module.keyvault]
+
+}
+module "compute" {
+  source              = "./modules/compute"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  admin_username      = "azureadmin"
+  admin_password      = azurerm_key_vault_secret.vm_password.value
+  subnet_id           = module.spoke_dev_network.subnet_ids["snet-app"]
+  vm_name             = "vm-app-dev"
+}
+resource "azurerm_role_assignment" "vm_kv_reader" {
+  principal_id         = module.compute.vm_principal_id
+  role_definition_name = "Key Vault Secrets User."
+  scope                = module.keyvault.key_vault_id
+
+}
